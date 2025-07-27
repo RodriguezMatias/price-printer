@@ -76,12 +76,11 @@ export default function Home() {
     return (
         <div
             style={{
-                backgroundColor: '#f4f4f4',
+                background: '#ffffff',
                 minHeight: '100vh',
                 width: '100vw',
                 padding: '40px 40px',
                 fontFamily: 'Arial, sans-serif',
-                color: '#1a1a1a',
                 boxSizing: 'border-box',
             }}
         >
