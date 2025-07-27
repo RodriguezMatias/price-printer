@@ -2,15 +2,9 @@ import { useState, useEffect } from 'react';
 import {generarPDF} from "../utils/generarPDF.ts";
 import EliminarItemModal from "./EliminarItemModal.tsx";
 import {generarPDFHalf} from "../utils/generarPDFHalf.ts";
+import {useSyncSelected} from "../hooks/useSyncSelected.ts";
+import type {Item} from '../types/item';
 
-type Item  = {
-    sku: string;
-    nombre: string;
-    descripcion: string;
-    precioLista: number;
-    precioContado: number;
-    precioOferta: number;
-};
 
 type Props = {
     items: Item[];
@@ -30,13 +24,8 @@ export default function ItemTable({ items, onChange }: Props) {
         setEditableItems(items);
     }, [items]);
 
-    useEffect(() => {
-        setSelected(prevSelected =>
-            prevSelected.filter((sel) =>
-                editableItems.some((item) => item.sku === sel.sku)
-            )
-        );
-    }, [editableItems]);
+    useSyncSelected(editableItems, setSelected);
+
 
 
     const updateItem = (sku: string, field: keyof Item, value: string | number) => {
@@ -92,9 +81,18 @@ export default function ItemTable({ items, onChange }: Props) {
 
     return (
         <div>
-            <button onClick={() => setEditableMode(!editableMode)} style={{ marginBottom: 16 }}>
+            <button
+                onClick={() => setEditableMode(!editableMode)}
+                disabled={editableItems.length === 0}
+                style={{
+                    marginBottom: 16,
+                    opacity: editableItems.length === 0 ? 0.5 : 1,
+                    cursor: editableItems.length === 0 ? 'not-allowed' : 'pointer'
+                }}
+            >
                 {editableMode ? '✅ Finalizar edición' : '✏️ Editar ítems'}
             </button>
+
 
             <p style={{ fontStyle: 'italic', marginBottom: 8 }}>
                 {editableMode ? 'Total de ' : 'Editando '}{editableItems.length} productos

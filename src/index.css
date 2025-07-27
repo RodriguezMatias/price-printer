@@ -12,21 +12,13 @@
 }
 
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-
-}
-
 /* index.css o App.css */
+
 html, body {
-  height: 100%;
   margin: 0;
   padding: 0;
-  background: linear-gradient(to bottom right, #cce4f6, #a5cbe0);
+  min-width: 320px;
+  min-height: 100vh;
 }
 
 

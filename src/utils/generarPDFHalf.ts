@@ -1,7 +1,9 @@
 import jsPDF from 'jspdf';
 import logoBase64 from '../assets/logo';
+import {formatearARS} from "./currencyFormatter.ts";
+import type {Item} from "../types/item.ts";
 
-export function generarPDFHalf(items: any[]) {
+export function generarPDFHalf(items: Item[]) {
     const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
 
     const pageWidth = 210;
@@ -17,13 +19,6 @@ export function generarPDFHalf(items: any[]) {
     const rowsPerPage = Math.floor((pageHeight - spacingY) / (labelHeight + spacingY));
     const labelsPerPage = labelsPerRow * rowsPerPage;
 
-    const formatearARS = (valor: number): string => {
-        return new Intl.NumberFormat('es-AR', {
-            style: 'currency',
-            currency: 'ARS',
-            minimumFractionDigits: 2,
-        }).format(valor);
-    };
 
     items.forEach((item, index) => {
         const labelIndex = index % labelsPerPage;

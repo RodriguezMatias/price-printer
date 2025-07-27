@@ -102,6 +102,50 @@ Los productos editados pueden exportarse en formato JSON para respaldo o reutili
 - [ ] Persistencia en backend (opcional)
 - [ ] Subida y descarga desde nube (Google Drive, Dropbox, etc.)
 
+## 🧪 Testing
+
+Este proyecto utiliza [Vitest](https://vitest.dev/) junto con [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/) para realizar pruebas automatizadas.
+
+### 📦 Instalación de dependencias de testing
+
+Si aún no tenés las dependencias instaladas, ejecutá:
+
+```bash
+npm install -D vitest jsdom @testing-library/react @testing-library/jest-dom
+```
+
+> Asegurate también de tener `setupTests.ts` en `src/` con la siguiente línea para extender las aserciones:
+>
+> ```ts
+> import '@testing-library/jest-dom';
+> ```
+
+### ▶️ Ejecutar los tests con UI
+
+Para correr los tests en modo interactivo con una interfaz visual:
+
+```bash
+npx vitest --ui
+```
+
+Esto abrirá un entorno web donde podés:
+- Ver todos los tests.
+- Ejecutar o volver a ejecutar uno o todos.
+- Ver el estado y resultados de manera visual.
+
+### ✅ Ejecutar los tests en consola
+
+También podés correrlos directamente por terminal:
+
+```bash
+npx vitest run
+```
+
+---
+
+Los tests están ubicados en `src/hooks/__tests__/` o junto a los componentes que testean.
+
+
 ## 🙌 Autor
 
 Desarrollado por [Matías Rodríguez](https://github.com/RodriguezMatias)

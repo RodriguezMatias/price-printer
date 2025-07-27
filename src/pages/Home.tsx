@@ -3,15 +3,8 @@ import UploadJson from '../components/UploadJson';
 import ItemTable from '../components/ItemTable';
 import AgregarItemModal from '../components/AgregarItemModal';
 import BorrarTodoModal from "../components/BorrarTodoModal.tsx";
+import type {Item} from '../types/item';
 
-type Item = {
-    sku: string;
-    nombre: string;
-    descripcion: string;
-    precioLista: number;
-    precioContado: number;
-    precioOferta: number;
-};
 
 export default function Home() {
     const [data, setData] = useState<Item[]>([]);
@@ -118,24 +111,41 @@ export default function Home() {
             <div>
                 <div style={{ display: 'flex', gap: 12, marginBottom: 24 }}>
                     <button onClick={() => setShowModal(true)}>➕ Agregar ítem</button>
-                    <button onClick={handleExportarJson}>📥 Guardar cambios en archivo .json</button>
+                    <button
+                        onClick={handleExportarJson}
+                        disabled={data.length === 0}
+                        style={{
+                            padding: '10px 16px',
+                            border: 'none',
+                            borderRadius: 4,
+                            color: 'white',
+                            cursor: data.length === 0 ? 'not-allowed' : 'pointer',
+                            opacity: data.length === 0 ? 0.5 : 1
+                        }}
+                    >
+                        📥 Guardar cambios en archivo .json
+                    </button>
+
                 </div>
                 <h2 style={{ fontSize: 24, marginBottom: 16 }}>🧾 Items</h2>
 
                 <button
                     onClick={() => setShowDeleteModal(true)}
+                    disabled={data.length === 0}
                     style={{
                         backgroundColor: '#e74c3c',
                         color: 'white',
                         border: 'none',
                         padding: '10px 16px',
                         borderRadius: 4,
-                        cursor: 'pointer',
-                        marginBottom: 16
+                        marginBottom: 16,
+                        opacity: data.length === 0 ? 0.5 : 1,
+                        cursor: data.length === 0 ? 'not-allowed' : 'pointer'
                     }}
                 >
                     🗑 Borrar todos los items
                 </button>
+
                 <ItemTable items={data} onChange={setData} />
             </div>
 
