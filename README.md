@@ -108,8 +108,6 @@ Este proyecto utiliza [Vitest](https://vitest.dev/) junto con [React Testing Lib
 
 ### 📦 Instalación de dependencias de testing
 
-Si aún no tenés las dependencias instaladas, ejecutá:
-
 ```bash
 npm install -D vitest jsdom @testing-library/react @testing-library/jest-dom
 ```
@@ -122,29 +120,54 @@ npm install -D vitest jsdom @testing-library/react @testing-library/jest-dom
 
 ### ▶️ Ejecutar los tests con UI
 
-Para correr los tests en modo interactivo con una interfaz visual:
-
 ```bash
 npx vitest --ui
 ```
 
-Esto abrirá un entorno web donde podés:
-- Ver todos los tests.
-- Ejecutar o volver a ejecutar uno o todos.
-- Ver el estado y resultados de manera visual.
-
 ### ✅ Ejecutar los tests en consola
-
-También podés correrlos directamente por terminal:
 
 ```bash
 npx vitest run
 ```
 
----
+## 📊 Reporte de cobertura
 
-Los tests están ubicados en `src/hooks/__tests__/` o junto a los componentes que testean.
+Para verificar la cobertura de código del proyecto:
 
+### 🧪 Paso 1: Configuración en `vite.config.ts`
+
+```ts
+test: {
+  coverage: {
+    provider: 'v8',
+    reporter: ['text', 'html'],
+    reportsDirectory: './coverage',
+    exclude: ['**/node_modules/**', '**/dist/**', '**/*.d.ts'],
+  },
+}
+```
+
+### 🧪 Paso 2: Ejecutar la cobertura
+
+```bash
+npx vitest run --coverage
+```
+
+Esto genera un resumen en consola y un reporte HTML en `./coverage/index.html`. Podés abrirlo directamente con:
+
+```bash
+npx open-cli coverage/index.html
+```
+
+También podés configurar scripts en `package.json`:
+
+```json
+"scripts": {
+  "test": "vitest",
+  "test:coverage": "vitest run --coverage",
+  "open:coverage": "open-cli coverage/index.html"
+}
+```
 
 ## 🙌 Autor
 
