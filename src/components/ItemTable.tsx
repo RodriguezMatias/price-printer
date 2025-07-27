@@ -4,6 +4,7 @@ import EliminarItemModal from "./EliminarItemModal.tsx";
 import {generarPDFHalf} from "../utils/generarPDFHalf.ts";
 import {useSyncSelected} from "../hooks/useSyncSelected.ts";
 import type {Item} from '../types/item';
+import './ItemTable.css'
 
 
 type Props = {
@@ -78,11 +79,44 @@ export default function ItemTable({ items, onChange }: Props) {
         item.nombre.toLowerCase().includes(nombreFiltro.toLowerCase())
     );
 
+    const sincronizarSeleccion = (nuevaLista: Item[]) => {
+        const nuevosSeleccionados = nuevaLista.filter(item =>
+            selected.some(sel => sel.sku === item.sku)
+        );
+        setSelected(nuevosSeleccionados);
+    };
+
+
+    const iniciarEdicion = () => {
+        setEditableItems(items);
+        setEditableMode(true);
+    };
+
+    const finalizarEdicion = () => {
+        // Guardar en estado padre
+        if (onChange) onChange(editableItems);
+
+        // Guardar en localStorage
+        const stored = localStorage.getItem('productos');
+        if (stored) {
+            try {
+                const parsed = JSON.parse(stored);
+                parsed.items = editableItems;
+                localStorage.setItem('productos', JSON.stringify(parsed));
+            } catch {
+                console.warn('No se pudo guardar en localStorage');
+            }
+        }
+
+        setEditableMode(false);
+        sincronizarSeleccion(editableItems);
+
+    };
 
     return (
         <div>
             <button
-                onClick={() => setEditableMode(!editableMode)}
+                onClick={editableMode ? finalizarEdicion : iniciarEdicion}
                 disabled={editableItems.length === 0}
                 style={{
                     marginBottom: 16,
@@ -92,6 +126,7 @@ export default function ItemTable({ items, onChange }: Props) {
             >
                 {editableMode ? '✅ Finalizar edición' : '✏️ Editar ítems'}
             </button>
+
 
 
             <p style={{ fontStyle: 'italic', marginBottom: 8 }}>
@@ -116,186 +151,128 @@ export default function ItemTable({ items, onChange }: Props) {
             </div>
 
 
-            <table border={1} cellPadding={6} style={{ width: '100%' }}>
+            <table className="tabla-productos">
                 <thead>
-                <tr>
-                    <th>
-                        Todos
-                        <input
-                            type="checkbox"
-                            checked={
-                                editableItems.length > 0 &&
-                                editableItems.every((item) => selected.includes(item))
-                            }
-                            onChange={toggleSelectAll}
-                            disabled={editableMode} // ✅ desactivar si está editando
-                            style={{
-                                backgroundColor: '#fff',
-                                color: '#000',
-                                border: '1px solid #ccc',
-                                padding: '6px 8px',
-                                borderRadius: 4,
-                                width: '100%',
-                                boxSizing: 'border-box',
-                                fontSize: 14,
-                            }}
-                        />
-                    </th>
-                    <th>Sku</th>
-                    <th>Nombre</th>
-                    <th>Descripción</th>
-                    <th>Precio Lista</th>
-                    <th>Precio Contado</th>
-                    <th>Precio Oferta (Opcional)</th>
-                    <th>Acciones</th>
-                </tr>
+                    <tr>
+                        <th>
+                           <span style={{marginRight:10}}> Marcar todos:</span>
+                            <input
+                                className={'checkbox-estilado'}
+                                type="checkbox"
+                                checked={
+                                    editableItems.length > 0 &&
+                                    editableItems.every((item) => selected.includes(item))
+                                }
+                                onChange={toggleSelectAll}
+                                disabled={editableMode}
+                            />
+                        </th>
+                        <th>Sku</th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Precio Lista</th>
+                        <th>Precio Contado</th>
+                        <th>Precio Oferta (Opcional)</th>
+                        <th>Acciones</th>
+                    </tr>
                 </thead>
                 <tbody>
-                {itemsFiltrados.map((item) => (
-                    <tr key={item.sku}>
-                        <td>
-                            <input
-                                type="checkbox"
-                                checked={selected.includes(item)}
-                                onChange={() => toggleSelect(item)}
-                                disabled={editableMode} // ✅ desactivar si está editando
-                                style={{
-                                    backgroundColor: '#fff',
-                                    color: '#000',
-                                    border: '1px solid #ccc',
-                                    padding: '6px 8px',
-                                    borderRadius: 4,
-                                    width: '100%',
-                                    boxSizing: 'border-box',
-                                    fontSize: 14,
-                                }}
-                            />
-                        </td>
-                        <td>{item.sku}</td>
-                        <td>
-                            {editableMode ? (
+                    {itemsFiltrados.map((item) => (
+                        <tr key={item.sku}>
+                            <td>
                                 <input
-                                    type="text"
-                                    value={item.nombre}
-                                    onChange={(e) => updateItem(item.sku, 'nombre', e.target.value)}
-                                    disabled={!editableMode}
-                                    style={{
-                                        backgroundColor: '#fff',
-                                        color: '#000',
-                                        border: '1px solid #ccc',
-                                        padding: '6px 8px',
-                                        borderRadius: 4,
-                                        width: '100%',
-                                        boxSizing: 'border-box',
-                                        fontSize: 14,
-                                    }}
+                                    className={'checkbox-estilado'}
+                                    type="checkbox"
+                                    checked={selected.includes(item)}
+                                    onChange={() => toggleSelect(item)}
+                                    disabled={editableMode}
                                 />
-                            ) : (
-                                item.nombre
-                            )}
-                        </td>
+                            </td>
+                            <td>{item.sku}</td>
+                            <td>
+                                {editableMode ? (
+                                    <input
+                                        className={'input-numero'}
+                                        style={{width:'80%'}}
+                                        type="text"
+                                        value={item.nombre}
+                                        onChange={(e) => updateItem(item.sku, 'nombre', e.target.value)}
+                                        disabled={!editableMode}
+                                    />
+                                ) : (
+                                    item.nombre
+                                )}
+                            </td>
 
-                        <td>
-                            {editableMode ? (
-                                <input
-                                    type="text"
-                                    value={item.descripcion}
-                                    onChange={(e) => updateItem(item.sku, 'descripcion', e.target.value)}
-                                    disabled={!editableMode}
-                                    style={{
-                                        backgroundColor: '#fff',
-                                        color: '#000',
-                                        border: '1px solid #ccc',
-                                        padding: '6px 8px',
-                                        borderRadius: 4,
-                                        width: '100%',
-                                        boxSizing: 'border-box',
-                                        fontSize: 14,
-                                    }}
-                                />
-                            ) : (
-                                item.descripcion
-                            )}
-                        </td>
-                        <td>
-                            {editableMode ? (
-                                <input
-                                    type="number"
-                                    value={item.precioLista}
-                                    onChange={(e) => updateItem(item.sku, 'precioLista', e.target.value)}
-                                    disabled={!editableMode}
-                                    style={{
-                                        backgroundColor: '#fff',
-                                        color: '#000',
-                                        border: '1px solid #ccc',
-                                        padding: '6px 8px',
-                                        borderRadius: 4,
-                                        width: '100%',
-                                        boxSizing: 'border-box',
-                                        fontSize: 14,
-                                    }}
-                                />
-                            ) : (
-                                new Intl.NumberFormat('es-AR', {
-                                    style: 'currency',
-                                    currency: 'ARS',
-                                }).format(item.precioLista)
-                            )}
-                        </td>
-                        <td>
-                            {editableMode ? (
-                                <input
-                                    type="number"
-                                    value={item.precioContado}
-                                    onChange={(e) => updateItem(item.sku, 'precioContado', e.target.value)}
-                                    disabled={!editableMode}
-                                    style={{
-                                        backgroundColor: '#fff',
-                                        color: '#000',
-                                        border: '1px solid #ccc',
-                                        padding: '6px 8px',
-                                        borderRadius: 4,
-                                        width: '100%',
-                                        boxSizing: 'border-box',
-                                        fontSize: 14,
-                                    }}
-                                />
-                            ) : (
-                                new Intl.NumberFormat('es-AR', {
-                                    style: 'currency',
-                                    currency: 'ARS',
-                                }).format(item.precioContado)
-                            )}
-                        </td>
-                        <td>
-                            {editableMode ? (
-                                <input
-                                    type="number"
-                                    value={item.precioOferta}
-                                    onChange={(e) => updateItem(item.sku, 'precioOferta', e.target.value)}
-                                    disabled={!editableMode}
-                                    style={{
-                                        backgroundColor: '#fff',
-                                        color: '#000',
-                                        border: '1px solid #ccc',
-                                        padding: '6px 8px',
-                                        borderRadius: 4,
-                                        width: '100%',
-                                        boxSizing: 'border-box',
-                                        fontSize: 14,
-                                    }}
-                                />
-                            ) : (
-                                new Intl.NumberFormat('es-AR', {
-                                    style: 'currency',
-                                    currency: 'ARS',
-                                }).format(item.precioOferta)
-                            )}
-                        </td>
-                        <td>
-                            <button onClick={() => setItemAEliminar(item)}>🗑 Eliminar</button>
-                        </td>
-                    </tr>
+                            <td>
+                                {editableMode ? (
+                                    <input
+                                        className={'input-numero'}
+                                        style={{width:'80%'}}
+                                        type="text"
+                                        value={item.descripcion}
+                                        onChange={(e) => updateItem(item.sku, 'descripcion', e.target.value)}
+                                        disabled={!editableMode}
+                                    />
+                                ) : (
+                                    item.descripcion
+                                )}
+                            </td>
+                            <td>
+                                {editableMode ? (
+                                    <input
+                                        className={'input-numero'}
+                                        style={{width:'80%'}}
+                                        type="number"
+                                        value={item.precioLista}
+                                        onChange={(e) => updateItem(item.sku, 'precioLista', e.target.value)}
+                                        disabled={!editableMode}
+                                    />
+                                ) : (
+                                    new Intl.NumberFormat('es-AR', {
+                                        style: 'currency',
+                                        currency: 'ARS',
+                                    }).format(item.precioLista)
+                                )}
+                            </td>
+                            <td>
+                                {editableMode ? (
+                                    <input
+                                        className={'input-numero'}
+                                        style={{width:'80%'}}
+                                        type="number"
+                                        value={item.precioContado}
+                                        onChange={(e) => updateItem(item.sku, 'precioContado', e.target.value)}
+                                        disabled={!editableMode}
+                                    />
+                                ) : (
+                                    new Intl.NumberFormat('es-AR', {
+                                        style: 'currency',
+                                        currency: 'ARS',
+                                    }).format(item.precioContado)
+                                )}
+                            </td>
+                            <td>
+                                {editableMode ? (
+                                    <input
+                                        className={'input-numero'}
+                                        style={{width:'80%'}}
+                                        type="number"
+                                        value={item.precioOferta}
+                                        onChange={(e) => updateItem(item.sku, 'precioOferta', e.target.value)}
+                                        disabled={!editableMode}
+                                    />
+                                ) : (
+                                    new Intl.NumberFormat('es-AR', {
+                                        style: 'currency',
+                                        currency: 'ARS',
+                                    }).format(item.precioOferta)
+                                )}
+                            </td>
+                            <td>
+                                <button className={'btn-eliminar'} onClick={() => setItemAEliminar(item)}>🗑 Eliminar</button>
+                            </td>
+                        </tr>
                 ))}
                 </tbody>
             </table>

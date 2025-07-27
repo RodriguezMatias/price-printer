@@ -77,78 +77,64 @@ export default function Home() {
                 boxSizing: 'border-box',
             }}
         >
-            <div style={{display: 'flex', flexDirection: 'row', gap: 20}}>
-                <div style={{display: 'flex', flexDirection: 'column',margin:10}}>
-                <h1 style={{ fontSize: 36, marginBottom: 8 }}>📋 Item Printer</h1>
 
-                <p style={{ fontSize: 18, marginBottom: 24, color: '#444' }}>
-                    Si ya tenes datos guardados,subí un archivo <strong>.json</strong> con los productos para generar etiquetas de precios.
+            <h1 style={{ fontSize: 36, margin: 10 }}>📋 Item Printer</h1>
+
+            <div style={{display: 'flex', flexDirection: 'row', gap: 20,border: '2px dashed #ccc',
+                borderRadius: 12}}>
+                <p style={{ fontSize: 18, margin: 10 }}>
+                     Si ya tenes datos guardados,subí un archivo <strong>.json</strong> con los productos para generar etiquetas de precios:
                 </p>
-                </div>
                 <div
                     style={{
-                        padding: '32px 24px',
-                        backgroundColor: '#ffffff',
-                        border: '2px dashed #ccc',
+                        padding: '10px',
+                        border: '2px solid #ccc',
                         borderRadius: 12,
                         textAlign: 'center',
-                        marginBottom: 48,
-                        maxWidth: 1000,
+                        margin: 10,
                     }}
                 >
-                    <UploadJson
-                        onData={(json) => {
-                            localStorage.setItem('productos', JSON.stringify(json));
-                            setData(json.items);
-                        }}
-                    />
-                    <p style={{ fontSize: 14, color: '#686666', marginTop: 12 }}>
-                        Solo se acepta formato JSON con estructura válida.
-                    </p>
+                <UploadJson
+                    onData={(json) => {
+                        localStorage.setItem('productos', JSON.stringify(json));
+                        setData(json.items);
+                    }}
+                />
+                <p style={{ fontSize: 14, color: '#686666', marginTop: 12 }}>
+                    Solo se acepta formato JSON con estructura válida.
+                </p>
                 </div>
             </div>
 
-            <div>
+            <div style={{marginTop:20,padding: 10,border: '2px dashed #ccc', borderRadius: 12}}>
+                <h2 style={{ fontSize: 24, marginBottom: 16 }}>🧾 Items</h2>
                 <div style={{ display: 'flex', gap: 12, marginBottom: 24 }}>
                     <button onClick={() => setShowModal(true)}>➕ Agregar ítem</button>
                     <button
                         onClick={handleExportarJson}
                         disabled={data.length === 0}
                         style={{
-                            padding: '10px 16px',
-                            border: 'none',
-                            borderRadius: 4,
-                            color: 'white',
                             cursor: data.length === 0 ? 'not-allowed' : 'pointer',
                             opacity: data.length === 0 ? 0.5 : 1
                         }}
                     >
                         📥 Guardar cambios en archivo .json
                     </button>
-
+                    <button
+                        onClick={() => setShowDeleteModal(true)}
+                        disabled={data.length === 0}
+                        style={{
+                            backgroundColor: '#e74c3c',
+                            color: 'white',
+                            opacity: data.length === 0 ? 0.5 : 1,
+                            cursor: data.length === 0 ? 'not-allowed' : 'pointer'
+                        }}
+                    >
+                        🗑 Borrar todos los items
+                    </button>
                 </div>
-                <h2 style={{ fontSize: 24, marginBottom: 16 }}>🧾 Items</h2>
-
-                <button
-                    onClick={() => setShowDeleteModal(true)}
-                    disabled={data.length === 0}
-                    style={{
-                        backgroundColor: '#e74c3c',
-                        color: 'white',
-                        border: 'none',
-                        padding: '10px 16px',
-                        borderRadius: 4,
-                        marginBottom: 16,
-                        opacity: data.length === 0 ? 0.5 : 1,
-                        cursor: data.length === 0 ? 'not-allowed' : 'pointer'
-                    }}
-                >
-                    🗑 Borrar todos los items
-                </button>
-
                 <ItemTable items={data} onChange={setData} />
             </div>
-
             {showModal && (
                 <AgregarItemModal
                     onClose={() => setShowModal(false)}
@@ -156,14 +142,11 @@ export default function Home() {
                     nextSku={(data.length + 1).toString()}
                 />
             )}
-
             <BorrarTodoModal
                 visible={showDeleteModal}
                 onCancel={() => setShowDeleteModal(false)}
                 onConfirm={handleBorrarTodo}
             />
-
-
         </div>
     );
 }

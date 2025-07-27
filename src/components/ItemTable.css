@@ -1,0 +1,70 @@
+.tabla-productos {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+}
+
+.tabla-productos thead {
+    background-color: #f1f1f1;
+}
+
+.tabla-productos th,
+.tabla-productos td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.tabla-productos tr:nth-child(even) {
+    background-color: #fafafa;
+}
+
+.tabla-productos tr:hover {
+    background-color: #eef6ff;
+}
+
+.tabla-input {
+    width: 100%;
+    padding: 6px 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+.checkbox-input {
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+.btn-eliminar {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-eliminar:hover {
+    background-color: #c0392b;
+}
+
+.checkbox-estilado {
+    width: 18px;
+    height: 18px;
+    accent-color: #3498db; /* Azul moderno */
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: 4px;
+}
+
+.checkbox-estilado:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}

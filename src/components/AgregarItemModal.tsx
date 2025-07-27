@@ -89,9 +89,11 @@ export default function AgregarItemModal({ onClose, onSave, nextSku }: Props) {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                     <p>SKU: <strong>{form.sku}</strong></p>
 
-                    <div>
-                        <label>Nombre:  (Max 20 caracteres)</label>
+                    <div className="input-wrapper">
+                        <label>Nombre  (Max 20 caracteres)</label>
+
                         <input
+                            className="input-numero"
                             type="text"
                             value={form.nombre}
                             onChange={(e) => handleChange('nombre', e.target.value)}
@@ -99,9 +101,10 @@ export default function AgregarItemModal({ onClose, onSave, nextSku }: Props) {
                         />
                     </div>
 
-                    <div>
-                        <label>Descripción: (Max 40 caracteres)</label>
+                    <div className="input-wrapper">
+                        <label>Descripción (Max 40 caracteres)</label>
                         <input
+                            className="input-numero"
                             type="text"
                             value={form.descripcion}
                             onChange={(e) => handleChange('descripcion', e.target.value)}
@@ -111,32 +114,35 @@ export default function AgregarItemModal({ onClose, onSave, nextSku }: Props) {
 
                     <hr />
 
-                    <div>
-                        <label>Precio Lista:</label>
+                    <div className="input-wrapper">
+                        <span className="input-prefix">$</span>
+                        <label>Precio Lista</label>
                         <input
-                            type="number"
+                            className="input-numero"
+                            type="text"
                             value={form.precioLista}
-                            min={0}
                             onChange={(e) => handleChange('precioLista', e.target.value)}
                         />
                     </div>
 
-                    <div>
-                        <label>Precio Contado:</label>
+                    <div className="input-wrapper">
+                        <span className="input-prefix">$</span>
+                        <label>Precio Contado</label>
                         <input
-                            type="number"
+                            className="input-numero"
+                            type="text"
                             value={form.precioContado}
-                            min={0}
                             onChange={(e) => handleChange('precioContado', e.target.value)}
                         />
                     </div>
 
-                    <div>
-                        <label>Precio Oferta:</label>
+                    <div className="input-wrapper">
+                        <span className="input-prefix">$</span>
+                        <label>Precio Oferta</label>
                         <input
-                            type="number"
+                            className="input-numero"
+                            type="text"
                             value={form.precioOferta}
-                            min={0}
                             onChange={(e) => handleChange('precioOferta', e.target.value)}
                         />
                     </div>
@@ -146,8 +152,8 @@ export default function AgregarItemModal({ onClose, onSave, nextSku }: Props) {
                     )}
 
                     <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12 }}>
-                        <button onClick={onClose}>Cancelar</button>
-                        <button onClick={handleSubmit}>Guardar</button>
+                        <button style={{backgroundColor: '#f40000',color:'white'}}onClick={onClose}>Cancelar</button>
+                        <button style={{backgroundColor: '#49a842',color:'white'}} onClick={handleSubmit}>Guardar</button>
                     </div>
                 </div>
             </div>
