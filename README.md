@@ -1,69 +1,109 @@
-# React + TypeScript + Vite
+# 🖨️ Price Printer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Price Printer** es una aplicación web desarrollada en React que permite gestionar productos y generar etiquetas de precios listas para imprimir. Está orientada a negocios que desean mantener una lista de productos actualizada con facilidad y generar etiquetas en formato PDF con diferentes opciones de visualización.
 
-Currently, two official plugins are available:
+## 🚀 Características principales
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 📂 Carga de productos mediante archivo JSON
+- 📝 Edición inline de nombre, descripción y precios
+- 🗑️ Eliminación de productos con confirmación y persistencia
+- 💾 Guardado automático en `localStorage`
+- 🧾 Generación de etiquetas en PDF:
+  - Formato completo (1 etiqueta por fila)
+  - Formato media hoja (2 etiquetas por fila)
+- 🔍 Filtro en tiempo real por nombre
+- ✅ Soporte para precios de lista, contado y oferta
+- 💡 Precios formateados como moneda en pesos argentinos
 
-## Expanding the ESLint configuration
+## 🖼️ Vista general
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+La aplicación permite cargar o agregar productos, visualizarlos en una tabla editable y generar etiquetas con diseño claro y profesional. Las etiquetas incluyen:
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- ✅ Nombre del producto (máx. 20 caracteres)
+- ✅ Descripción truncada (máx. 40 caracteres)
+- ✅ SKU como identificador
+- ✅ Precio de lista, contado y oferta (con tachado del precio anterior si aplica)
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+## 📦 Estructura del proyecto
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+src/
+├── assets/
+│   └── logo.ts           # Logo en base64 para las etiquetas
+├── components/
+│   ├── AgregarItemModal.tsx
+│   ├── EliminarItemModal.tsx
+│   ├── ItemTable.tsx
+│   ├── UploadJson.tsx
+├── pages/
+│   └── index.tsx         # Página principal de la app
+├── utils/
+│   ├── generarPDF.ts
+│   └── generarPDFHalf.ts
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## ⚙️ Instalación y uso
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+```bash
+# Clonar el repositorio
+git clone https://github.com/RodriguezMatias/price-printer.git
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Ingresar al directorio del proyecto
+cd price-printer
+
+# Instalar dependencias
+npm install
+
+# Ejecutar en modo desarrollo
+npm run dev
 ```
+
+Abre tu navegador en [http://localhost:3000](http://localhost:3000)
+
+## 🧪 Formato esperado del archivo JSON
+
+```json
+{
+  "nombreNegocio": "Punto Mueble",
+  "descripcion": "Mueblería especializada en madera",
+  "items": [
+    {
+      "sku": "1",
+      "nombre": "Mesa 1.20 x 0.80",
+      "descripcion": "Madera maciza, terminación lustre natural",
+      "precioLista": 100000,
+      "precioContado": 90000,
+      "precioOferta": 85000,
+      "modificado": "2024-01-01T00:00:00.000Z",
+      "creado": "2024-01-01T00:00:00.000Z"
+    }
+  ]
+}
+```
+
+⚠️ El campo `items` debe contener un array con objetos que cumplan con la estructura indicada.
+
+## 📤 Exportación
+
+Los productos editados pueden exportarse en formato JSON para respaldo o reutilización.
+
+## 🛠️ Tecnologías utilizadas
+
+- **React + TypeScript**
+- **jsPDF** para generar los PDFs
+- **HTML5 & CSS3**
+- **LocalStorage** para persistencia en el navegador
+
+## ✅ Próximas mejoras
+
+- [x] Precio anterior tachado
+- [ ] Modo oscuro
+- [ ] Reordenamiento de columnas
+- [ ] Persistencia en backend (opcional)
+- [ ] Subida y descarga desde nube (Google Drive, Dropbox, etc.)
+
+## 🙌 Autor
+
+Desarrollado por [Matías Rodríguez](https://github.com/RodriguezMatias)
+
+---
